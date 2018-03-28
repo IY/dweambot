@@ -1,0 +1,380 @@
+//skullcheck
+
+            for(Player p: getPlayers().all()){
+                if(p.isSkulled()){
+                    log("Skulled player found!");
+                    log(p.getName());
+                    log(Integer.toString(p.getLevel()));
+                }
+            }
+
+//gearcheck
+
+public static boolean hasNothingEquipped(Player p) {
+        for (int i : getEquipped(p)) {
+            if (i != -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int[] getEquipped(Player p) {
+      
+        int[] appearanceData = p.getComposite().getApperance();
+        int[] equipment = new int[appearanceData.length];
+        for (int i = 0; i < equipment.length; i++) {
+            equipment[i] = appearanceData[i] > 512 ? appearanceData[i] - 512 : -1;
+        }
+        return equipment;
+    }
+
+private HashMap<EquipmentSlot, String> getOthersEquipment(Player p) {
+        HashMap<EquipmentSlot, String> equipmentList = new HashMap<>();
+        if (p != null) {
+            int[] equipment = p.getComposite().getApperance();
+            if (p.getComposite() != null && p.getComposite().getApperance() != null) {
+                for (int i = 0; i < equipment.length; i++) {
+                    if (equipment[i] - 512 > 0) {
+                        switch (i) {
+                            case 0:
+                                equipmentList.put(EquipmentSlot.HAT, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 1:
+                                equipmentList.put(EquipmentSlot.CAPE, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 2:
+                                equipmentList.put(EquipmentSlot.AMULET, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 3:
+                                equipmentList.put(EquipmentSlot.WEAPON, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 4:
+                                equipmentList.put(EquipmentSlot.CHEST, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 5:
+                                equipmentList.put(EquipmentSlot.SHIELD, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 7:
+                                equipmentList.put(EquipmentSlot.LEGS, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 9:
+                                equipmentList.put(EquipmentSlot.HANDS, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+                            case 10:
+                                equipmentList.put(EquipmentSlot.FEET, new Item(equipment[i] - 512, 1, getClient().getInstance()).getName());
+                                break;
+
+                        }
+                    }
+                }
+            }
+        }
+        return equipmentList;
+    }
+
+Lookup Class
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.List;
+
+public class CheckLevels{
+	    private int targetLevel;
+	    public CheckLevels(String username, int levelToCheck) {
+	        try {
+	            URL url = new URL("http://services.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" + username);
+	            URLConnection urlConnection = url.openConnection();
+	            BufferedReader input = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+	            StringBuilder sb = new StringBuilder();
+	            String scores;
+	            while ((scores = input.readLine()) != null) {
+	                sb.append(scores);
+	            }
+	            input.close();
+	            String jsonResult = sb.toString();
+	            if (jsonResult.contains("404 - Page not found")) {
+	                this.targetLevel = 1;
+	              
+	            } else {
+	                List<String> splitSkills = Arrays.asList(jsonResult.split(","));
+	              
+	                this.targetLevel = Integer.parseInt(splitSkills.get(levelToCheck));
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public int getTargetLevel () {
+	        return this.targetLevel;
+	    }
+	    
+	}Main class
+ 
+
+int overall = 1, attk = 3, defence = 5, str = 7, hp = 10, rng = 11, prayer = 13, magic = 15, cook = 17,wood = 19, fletch = 21, fish = 23, fire = 25,craft=27,
+    smith = 29,mine=31,herb=33,agil=35,theif=37,slay=39,farm=41,rune=43,hunt=45,con=47;
+
+int woodLevel = new CheckLevels("PlayerName",wood).getTargetLevel();
+
+	public static int[] getEquipped(Player p){
+		int[] appearanceData = p.getComposite().getApperance();
+		int[] equipment = new int[appearanceData.length];
+		for(int i = 0; i < equipment.length; i++){
+			equipment[i] = appearanceData[i] > 512 ? appearanceData[i]-512 : -1;
+		}
+		return equipment;
+	}
+
+Example usage of getting all players who have nothing equipped.
+
+@Override
+    public int onLoop() {
+        final List<Player> lp = getPlayers().all(player -> player != null && player.exists() && hasNothingEquipped(player));
+        if (lp != null && lp.size() > 0) {
+            for (Player p : lp) {
+                if (p != null) {
+                    log(p.getName());
+                }
+            }
+        }
+
+        return Calculations.random(600, 800);
+    }
+
+    public static int[] getEquipped(Player p) {
+        int[] appearanceData = p.getComposite().getApperance();
+        int[] equipment = new int[appearanceData.length];
+        for (int i = 0; i < equipment.length; i++) {
+            equipment[i] = appearanceData[i] > 512 ? appearanceData[i] - 512 : -1;
+        }
+        return equipment;
+    }
+
+    public static boolean hasNothingEquipped(Player p) {
+        for (int i : getEquipped(p)) {
+            if (i != -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+   public class MyClass 
+                extends AbstractScript
+                implements IRCListener { 
+
+    public static IRCConnection connection;
+
+    @Override
+    public void onStart() {
+        connection = new IRCConnection("#mychannel");
+        connection.addListener(this);
+        connection.start();
+    }
+
+    @Override
+    public void onExit() {
+        connection.closeConnection();
+    }
+
+    @Override
+    public void messageReceived(IRCMessage message) {
+        String msg = message.getMessage();
+        String sender = message.getSender();
+
+        if (sender.equals("your_name")) {
+            if (msg.equals(".strlvl")) {
+                connection.sendChannelMessage("My str lvl is " + getSkills().getRealLevel(Skill.STRENGTH));
+            } else if (msg.equals(".stopscript")) {
+                getClient().getInstance().getScriptManager().stop();
+            }
+        }
+    }
+}
+Source:
+
+IRCConnection:
+
+/**
+* Created by Roma on 21.11.2015
+*
+*/
+public class IRCConnection
+        extends Thread {
+
+    BufferedWriter writer;
+    private String server = "irc.SwiftIRC.net";
+    Socket socket;
+    private boolean running = true;
+
+    private ArrayList<IRCListener> listeners;
+    private String username;
+    private String channel;
+    private String channelPassword;
+
+    public IRCConnection(String channel) {
+        this.listeners = new ArrayList<>();
+        this.channel = channel;
+        this.username = generateIRCName();
+        this.channelPassword = "";
+    }
+
+    public IRCConnection(String channel, String channelPassword) {
+        this.listeners = new ArrayList<>();
+        this.channel = channel;
+        this.username = generateIRCName();
+        this.channelPassword = channelPassword;
+    }
+
+    public IRCConnection(String username, String channel, String channelPassword){
+        this.listeners = new ArrayList<>();
+        this.username = username;
+        this.channel = channel;
+        this.channelPassword = channelPassword;
+    }
+
+    public IRCConnection(String server, String username, String channel, String channelPassword){
+        this.listeners = new ArrayList<>();
+        this.channel = channel;
+        this.username = username;
+        this.server = server;
+        this.channelPassword = channelPassword;
+    }
+
+    @Override
+    public void run(){
+        try {
+            socket = new Socket(server, 6667);
+            writer = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream()));
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+
+            writer.write("NICK " + username + "\r\n");
+            writer.write("USER " + username + " 8 * : IRC bot\r\n");
+            writer.flush();
+
+            final long timeout = System.currentTimeMillis() + 10000;
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (System.currentTimeMillis() >= timeout) {
+                    MethodContext.log("Connection timed out");
+                    break;
+                }
+                if (line.contains("004")) {
+                    break;
+                } else if (line.contains("433")) {
+                    MethodContext.log("Nickname is already in use");
+                    return;
+                }
+            }
+
+            writer.write("JOIN " + channel + " " + channelPassword + "\r\n");
+            writer.flush();
+
+            while ((line = reader.readLine()) != null) {
+                if(!running)
+                    break;
+
+                if(line.contains("PING ")) {
+                    writer.write("PONG " + line.substring(5) + "\n");
+                    writer.flush();
+                } else {
+                    addTrigger(new IRCMessage(line));
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addListener(IRCListener ircListener) { listeners.add(ircListener); }
+
+    public void removeListener(IRCListener ircListener) { listeners.remove(ircListener); }
+
+    private void addTrigger(IRCMessage message){
+        for (IRCListener listener : listeners)
+            listener.messageReceived(message);
+    }
+
+    public void closeConnection() {
+        MethodContext.log("Closing connection");
+        while (!socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        running = false;
+
+        MethodContext.log("Connection closed");
+    }
+
+    private void send(String buffer) {
+        try {
+            this.writer.write(buffer);
+            this.writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendChannelMessage(String message) { this.send("PRIVMSG " + this.channel + " :" + message + "\n"); }
+
+    public void sendPrivateMessage(String name, String message) { this.send("PRIVMSG " + name + " :" + message + "\n"); }
+
+    public void sendNotice(String target, String message) { this.send("NOTICE " + target + " :" + message + "\n"); }
+
+    private String getRSN() {
+        return Client.getClient().getLocalPlayer().getName();
+    }
+
+    private String generateIRCName() {
+        String outputName;
+        int t = 0;
+        for (int i = 0; i < getRSN().length(); i++) {
+            if(Character.isDigit(getRSN().charAt(i)))
+                t++;
+            else
+                break;
+        }
+        outputName = getRSN().substring(t);
+
+        if (outputName.contains(" "))
+            outputName = outputName.replaceAll(" ", "_");
+
+        return outputName;
+    }
+}
+IRCListener:
+
+public interface IRCListener {
+    void messageReceived(IRCMessage message);
+}
+IRCMessage:
+
+public class IRCMessage {
+
+    private String message;
+
+    public IRCMessage(String message) { this.message = message; }
+
+    public String getServerMessage() { return this.message; }
+
+    public String getFormatedMessage() { return getSender() + ": "+ getMessage(); }
+
+    public String getSender() { return this.message.split("!~")[0].replace(":", ""); }
+
+    public String getMessage() { return this.message.split(" :")[1]; }
+}
+
