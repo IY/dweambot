@@ -142,9 +142,10 @@ public class MonkSkenger  extends AbstractScript {
         	  log((String)"monk here");
         	  attack();
           }else {
-        	  
+        	  if (!inCombatBool) {
         	  log((String)"all taken, hopping");
               this.hopworlds();
+        	  }
           }
     }
     
