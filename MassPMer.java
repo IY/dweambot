@@ -98,7 +98,7 @@ implements AdvancedMessageListener {
         Friend[] f;
         URL oracle = null;
         try {
-            oracle = new URL("http://pidb.eu/scripts/enabled.txt");
+            oracle = new URL("http://oppblock.eu/scripts/enabled.txt");
         }
         catch (MalformedURLException e2) {
             e2.printStackTrace();
